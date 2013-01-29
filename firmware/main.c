@@ -13,12 +13,12 @@
 char command_buffer[10];
 int command_length = 0;
 
-void clear_buffer(){
+void clearBuffer(){
     command_length = 0;
     for(int i = 0; i != 10; i++) command_buffer[i] = 0x00; //clear buffer
 }
 
-void process_command_buffer(){
+void processCommandBuffer(){
   //OCR0A = USIDR;
   if(command_length < 3) return;  //no command is this short
   int op_code = command_length[1];
@@ -26,21 +26,23 @@ void process_command_buffer(){
   if(op_code == 0x01){
     if(command_length >= 4){
       OCR0A = command_buffer[3]; //currently ignores register byte
-      clear_buffer();
+      clearBuffer();
     }
   }else{
     //unknown op code
-    clear_buffer();
+    clearBuffer();
   }
 }
 
-void run_loop(){
+//main run-loop of the firmware
+void runLoop(){
   while ((USISR & (1 << USIOIF)) == 0) {}; // Do nothing until USI has data ready
+  
   if(command_length < 10){ //do not allow overflow, no command should be this long
     command_buffer[command_length++] = USIDR;
-    process_command_buffer();
+    processCommandBuffer();
   }else{
-    clear_buffer();
+    clearBuffer();
   } 
   USISR = _BV(USIOIF); //Clear the overflow flag 
 }
@@ -58,5 +60,5 @@ int main(void){
   USICR = _BV(USIWM0) | _BV(USICS0) | _BV(USICS1);
   USISR = _BV(USIOIF);
 
-  while(1){ run_loop(); }
+  while(1){ runLoop(); }
 }
