@@ -5697,6 +5697,18 @@ We've spent an enormous amount of time creating and checking these footprints an
 <junction x="68.58" y="73.66"/>
 </segment>
 </net>
+<net name="N$2" class="0">
+<segment>
+<pinref part="JP1" gate="A" pin="11"/>
+<wire x1="68.58" y1="93.98" x2="68.58" y2="86.36" width="0.1524" layer="91"/>
+<wire x1="68.58" y1="86.36" x2="76.2" y2="86.36" width="0.1524" layer="91"/>
+<wire x1="76.2" y1="86.36" x2="76.2" y2="60.96" width="0.1524" layer="91"/>
+<pinref part="ATTINY" gate="G$1" pin="15"/>
+<wire x1="76.2" y1="60.96" x2="66.04" y2="60.96" width="0.1524" layer="91"/>
+<junction x="66.04" y="60.96"/>
+<junction x="68.58" y="93.98"/>
+</segment>
+</net>
 </nets>
 </sheet>
 </sheets>

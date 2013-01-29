@@ -4,11 +4,17 @@
 #include <avr/interrupt.h>
 #include <util/delay.h>
 
+//SPI
 #define CTRL_PORT   DDRB 
 #define DATA_PORT   PORTB 
 #define CLK_PIN     PB7 
 #define DI_PIN      PB5 
 #define DO_PIN      PB6 
+
+#define HOST_PIN    PB3
+
+//registers
+#define REG_M1PW   0x01
 
 char command_buffer[10];
 int command_length = 0;
@@ -25,7 +31,14 @@ void processCommandBuffer(){
 
   if(op_code == 0x01){
     if(command_length >= 4){
-      OCR0A = command_buffer[3];    //currently ignores register byte
+      int reg = command_buffer[2];
+      int byte = command_buffer[3];
+      if(reg == 0x00){              //0x00 is undocumented, used for debugging. It echoes the received bit on the host pin.
+        byte = byte > 0 ? 1 : 0;    //ensure only 1-bit
+        PORTB |= (byte<<HOST_PIN); 
+      }else if(reg == REG_M1PW){
+        OCR0A = byte;
+      }
       clearBuffer();
     }
   }else{
@@ -54,6 +67,9 @@ int main(void){
   TCCR0A |= (1<<COM0A1);          //Clear OC0A on Compare Match when up-counting. Set OC0A on Compare Match when down-counting.
   OCR0A = 0x00;                   //duty cycle
   TCCR0B |= (1<<CS00);            // no prescaling
+  
+  DDRB |= (1<<HOST_PIN);          // make host pin an output
+  PORTB |= (0<<HOST_PIN);         // host pin starts low
 
   //Setup SPI/USI
   CTRL_PORT |= _BV(DO_PIN);
