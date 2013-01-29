@@ -1,4 +1,21 @@
-## License
+## Overview
+
+Open design for a programable real-time robotics controller.
+
+See [Byte Code](https://github.com/jwhitehorn/robot_core/wiki/Byte-Code).
+
+## Status
+
+This project is in a pre-alpha state, or in other words; Robot Core is currently a rough prototype. 
+With that said, it's design, function, and features will change drastically as it evolves.
+
+## Hardware & Documentation License
+
+Copyright (c) 2013, [Jason Whitehorn](https://github.com/jwhitehorn) released under the terms of:
+
+[Creative Commons CC-BY-SA 3.0](http://creativecommons.org/licenses/by-sa/3.0/us/)
+
+## Software License
 
 Copyright (c) 2013, [Jason Whitehorn](https://github.com/jwhitehorn) 
 All rights reserved.
