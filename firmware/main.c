@@ -19,13 +19,13 @@ void clearBuffer(){
 }
 
 void processCommandBuffer(){
-  //OCR0A = USIDR;
-  if(command_length < 3) return;  //no command is this short
-  int op_code = command_length[1];
+  if(command_length < 3) return;    //no command is this short
+  
+  int op_code = command_length[1];  //first byte of op-code isn't implemented yet
 
   if(op_code == 0x01){
     if(command_length >= 4){
-      OCR0A = command_buffer[3]; //currently ignores register byte
+      OCR0A = command_buffer[3];    //currently ignores register byte
       clearBuffer();
     }
   }else{
