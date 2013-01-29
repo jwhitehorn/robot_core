@@ -10,9 +10,38 @@
 #define DI_PIN      PB5 
 #define DO_PIN      PB6 
 
+char command_buffer[10];
+int command_length = 0;
+
+void clear_buffer(){
+    command_length = 0;
+    for(int i = 0; i != 10; i++) command_buffer[i] = 0x00; //clear buffer
+}
+
+void process_command_buffer(){
+  //OCR0A = USIDR;
+  if(command_length < 3) return;  //no command is this short
+  int op_code = command_length[1];
+
+  if(op_code == 0x01){
+    if(command_length >= 4){
+      OCR0A = command_buffer[3]; //currently ignores register byte
+      clear_buffer();
+    }
+  }else{
+    //unknown op code
+    clear_buffer();
+  }
+}
+
 void run_loop(){
   while ((USISR & (1 << USIOIF)) == 0) {}; // Do nothing until USI has data ready
-  OCR0A = USIDR;
+  if(command_length < 10){ //do not allow overflow, no command should be this long
+    command_buffer[command_length++] = USIDR;
+    process_command_buffer();
+  }else{
+    clear_buffer();
+  } 
   USISR = _BV(USIOIF); //Clear the overflow flag 
 }
 
