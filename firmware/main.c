@@ -16,12 +16,18 @@
 //registers
 #define REG_M1PW   0x01
 
-char command_buffer[10];
+//op codes
+#define REGW       0x01
+#define CLRH       0x02
+
+
+#define MAX_COMMAND_LEN 10
+char command_buffer[MAX_COMMAND_LEN];
 int command_length = 0;
 
 void clearBuffer(){
     command_length = 0;
-    for(int i = 0; i != 10; i++) command_buffer[i] = 0x00; //clear buffer
+    for(int i = 0; i != MAX_COMMAND_LEN; i++) command_buffer[i] = 0x00; //clear buffer
 }
 
 void processCommandBuffer(){
@@ -29,7 +35,11 @@ void processCommandBuffer(){
   
   int op_code = command_length[1];  //first byte of op-code isn't implemented yet
 
-  if(op_code == 0x01){
+  if(op_code == REGW){
+    /*
+    * REGW - Register Write - Writes byte 4 to the register specified in byte 3
+    * Command length: 4 bytes
+    */
     if(command_length >= 4){
       int reg = command_buffer[2];
       int byte = command_buffer[3];
@@ -40,9 +50,15 @@ void processCommandBuffer(){
         OCR0A = byte;
       }
       clearBuffer();
-    }
-  }else{
-    //unknown op code
+    }//else, wait for more bytes...
+  }else if(op_code == CLRH){
+    /*
+    * CLRH - Clear Host Pin - Resets the host pin. E.g., it sets it low.
+    * Command length: 2 bytes
+    */
+    PORTB |= (0<<HOST_PIN);
+    clearBuffer();
+  }else{ //unknown op code
     clearBuffer();
   }
 }
@@ -51,7 +67,7 @@ void processCommandBuffer(){
 void runLoop(){
   while ((USISR & (1 << USIOIF)) == 0) {}; // Do nothing until USI has data ready
   
-  if(command_length < 10){ //do not allow overflow, no command should be this long
+  if(command_length < MAX_COMMAND_LEN){ //do not allow overflow, no command should be this long
     command_buffer[command_length++] = USIDR;
     processCommandBuffer();
   }else{
@@ -76,5 +92,6 @@ int main(void){
   USICR = _BV(USIWM0) | _BV(USICS0) | _BV(USICS1);
   USISR = _BV(USIOIF);
 
+  clearBuffer();
   while(1){ runLoop(); }
 }
