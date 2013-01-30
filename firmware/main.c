@@ -33,7 +33,7 @@ void clearBuffer(){
 void processCommandBuffer(){
   if(command_length < 3) return;    //no command is this short
   
-  int op_code = command_length[1];  //first byte of op-code isn't implemented yet
+  int op_code = command_buffer[1];  //first byte of op-code isn't implemented yet
 
   if(op_code == REGW){
     /*
