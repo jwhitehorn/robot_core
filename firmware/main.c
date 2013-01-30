@@ -17,6 +17,7 @@
 #define DO_PIN      PB6 
 
 #define HOST_PIN    PB3
+#define DEBUG_PIN   PD0
 
 //registers
 #define REG_M1PW   0x01
@@ -74,9 +75,9 @@ ISR(USI_OVERFLOW_vect){
   USIDR = byte;
 /*
   for(int i = 0; i != byte; i++){
-    output_high(PORTD, PD5);
+    output_high(PORTD, DEBUG_PIN);
     _delay_ms(1000);
-    output_low(PORTD, PD5);
+    output_low(PORTD, DEBUG_PIN);
     _delay_ms(1000);
   }
   */
@@ -99,10 +100,10 @@ int main(void){
   DDRB |= (1<<HOST_PIN);          // make host pin an output
   PORTB |= (0<<HOST_PIN);         // host pin starts low
 
-  set_output(DDRD, PD5);
-  output_high(PORTD, PD5);
+  set_output(DDRD, DEBUG_PIN);
+  output_high(PORTD, DEBUG_PIN);
   _delay_ms(1000);
-  output_low(PORTD, PD5);
+  output_low(PORTD, DEBUG_PIN);
 
   //Setup SPI/USI
   CTRL_PORT |= _BV(DO_PIN);
