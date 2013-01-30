@@ -103,9 +103,9 @@
 </layers>
 <board>
 <plain>
-<wire x1="36.83" y1="41.91" x2="87.3" y2="41.91" width="0" layer="20"/>
-<wire x1="87.3" y1="41.91" x2="87.3" y2="80" width="0" layer="20"/>
-<wire x1="36.83" y1="80" x2="36.83" y2="41.91" width="0" layer="20"/>
+<wire x1="36.83" y1="28.575" x2="87.3" y2="28.575" width="0" layer="20"/>
+<wire x1="87.3" y1="28.575" x2="87.3" y2="80" width="0" layer="20"/>
+<wire x1="36.83" y1="80" x2="36.83" y2="28.575" width="0" layer="20"/>
 <text x="44.45" y="66.04" size="1.016" layer="21" rot="R45">GND</text>
 <text x="38.1" y="61.595" size="1.27" layer="21">Motor Power</text>
 <text x="38.1" y="50.165" size="1.27" layer="21">Motor 1</text>
@@ -188,6 +188,37 @@
 <pad name="20" x="-11.43" y="3.81" drill="0.8128" shape="long" rot="R90"/>
 <text x="-6.477" y="-0.635" size="1.27" layer="27" ratio="10">&gt;VALUE</text>
 <text x="-12.954" y="-4.953" size="1.27" layer="25" ratio="10" rot="R90">&gt;NAME</text>
+</package>
+<package name="SOCKET-14">
+<description>&lt;b&gt;Dual In Line Socket&lt;/b&gt;</description>
+<wire x1="8.89" y1="5.08" x2="-8.89" y2="5.08" width="0.1524" layer="21"/>
+<wire x1="-8.89" y1="-5.08" x2="8.89" y2="-5.08" width="0.1524" layer="21"/>
+<wire x1="8.89" y1="5.08" x2="8.89" y2="2.54" width="0.1524" layer="21"/>
+<wire x1="-8.89" y1="5.08" x2="-8.89" y2="2.54" width="0.1524" layer="21"/>
+<wire x1="-8.89" y1="-5.08" x2="-8.89" y2="-2.54" width="0.1524" layer="21"/>
+<wire x1="-8.89" y1="1.016" x2="-8.89" y2="-1.016" width="0.1524" layer="21" curve="-180"/>
+<wire x1="-8.89" y1="2.54" x2="8.89" y2="2.54" width="0.1524" layer="21"/>
+<wire x1="-8.89" y1="2.54" x2="-8.89" y2="1.016" width="0.1524" layer="21"/>
+<wire x1="8.89" y1="2.54" x2="8.89" y2="-2.54" width="0.1524" layer="21"/>
+<wire x1="-8.89" y1="-2.54" x2="8.89" y2="-2.54" width="0.1524" layer="21"/>
+<wire x1="-8.89" y1="-2.54" x2="-8.89" y2="-1.016" width="0.1524" layer="21"/>
+<wire x1="8.89" y1="-2.54" x2="8.89" y2="-5.08" width="0.1524" layer="21"/>
+<pad name="1" x="-7.62" y="-3.81" drill="0.8128" shape="long" rot="R90"/>
+<pad name="2" x="-5.08" y="-3.81" drill="0.8128" shape="long" rot="R90"/>
+<pad name="5" x="2.54" y="-3.81" drill="0.8128" shape="long" rot="R90"/>
+<pad name="6" x="5.08" y="-3.81" drill="0.8128" shape="long" rot="R90"/>
+<pad name="3" x="-2.54" y="-3.81" drill="0.8128" shape="long" rot="R90"/>
+<pad name="4" x="0" y="-3.81" drill="0.8128" shape="long" rot="R90"/>
+<pad name="7" x="7.62" y="-3.81" drill="0.8128" shape="long" rot="R90"/>
+<pad name="8" x="7.62" y="3.81" drill="0.8128" shape="long" rot="R90"/>
+<pad name="9" x="5.08" y="3.81" drill="0.8128" shape="long" rot="R90"/>
+<pad name="10" x="2.54" y="3.81" drill="0.8128" shape="long" rot="R90"/>
+<pad name="11" x="0" y="3.81" drill="0.8128" shape="long" rot="R90"/>
+<pad name="12" x="-2.54" y="3.81" drill="0.8128" shape="long" rot="R90"/>
+<pad name="13" x="-5.08" y="3.81" drill="0.8128" shape="long" rot="R90"/>
+<pad name="14" x="-7.62" y="3.81" drill="0.8128" shape="long" rot="R90"/>
+<text x="-5.715" y="-0.635" size="1.27" layer="27" ratio="10">&gt;VALUE</text>
+<text x="-9.144" y="-3.937" size="1.27" layer="25" ratio="10" rot="R90">&gt;NAME</text>
 </package>
 </packages>
 </library>
@@ -1749,6 +1780,7 @@ design rules under a new name.</description>
 <element name="R1" library="resistor" package="R6332" value="" x="49.53" y="71.755" rot="R180"/>
 <element name="LED1" library="led" package="LED5MM" value="" x="59.055" y="72.39"/>
 <element name="U$4" library="SparkFun-Aesthetics" package="OSHW-LOGO-S" value="" x="40.005" y="77.47"/>
+<element name="SN74AHCU04N" library="ic-package" package="SOCKET-14" value="" x="60.325" y="37.465"/>
 </elements>
 <signals>
 <signal name="N$1">
@@ -1873,6 +1905,14 @@ design rules under a new name.</description>
 <wire x1="60.3504" y1="72.39" x2="82.6008" y2="72.39" width="0.254" layer="16"/>
 <wire x1="83.82" y1="71.1708" x2="83.82" y2="71.12" width="0.254" layer="16"/>
 <wire x1="60.3504" y1="72.39" x2="60.325" y2="72.39" width="0.254" layer="16"/>
+<contactref element="L293D" pad="13"/>
+<contactref element="L293D" pad="12"/>
+<contactref element="L293D" pad="5"/>
+<contactref element="SN74AHCU04N" pad="7"/>
+<wire x1="60.3504" y1="54.864" x2="59.69" y2="55.88" width="0" layer="19" extent="1-1"/>
+<wire x1="52.07" y1="53.34" x2="52.1208" y2="54.864" width="0" layer="19" extent="1-1"/>
+<wire x1="59.69" y1="53.34" x2="60.3504" y2="54.864" width="0" layer="19" extent="1-1"/>
+<wire x1="67.945" y1="33.655" x2="64.008" y2="45.72" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="VCC">
 <contactref element="JP1" pad="1"/>
@@ -1881,11 +1921,25 @@ design rules under a new name.</description>
 <wire x1="81.2292" y1="76.2" x2="79.4004" y2="76.2" width="0.254" layer="1"/>
 <wire x1="71.7804" y1="68.58" x2="71.755" y2="68.58" width="0.254" layer="1"/>
 <wire x1="81.2292" y1="76.2" x2="81.28" y2="76.2" width="0.254" layer="1"/>
+<contactref element="SN74AHCU04N" pad="14"/>
+<wire x1="52.705" y1="41.275" x2="71.7804" y2="68.58" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="N$2">
 <contactref element="JP1" pad="11"/>
 <contactref element="ATTINY" pad="15"/>
 <wire x1="71.755" y1="55.88" x2="81.28" y2="63.5" width="0" layer="19" extent="1-1"/>
+</signal>
+<signal name="N$13">
+<contactref element="ATTINY" pad="4"/>
+<contactref element="SN74AHCU04N" pad="13"/>
+<contactref element="L293D" pad="7"/>
+<wire x1="52.07" y1="48.26" x2="64.135" y2="60.96" width="0" layer="19" extent="1-1"/>
+<wire x1="55.245" y1="41.275" x2="52.07" y2="48.26" width="0" layer="19" extent="1-1"/>
+</signal>
+<signal name="N$15">
+<contactref element="L293D" pad="2"/>
+<contactref element="SN74AHCU04N" pad="12"/>
+<wire x1="57.785" y1="41.275" x2="52.07" y2="60.96" width="0" layer="19" extent="1-1"/>
 </signal>
 </signals>
 </board>
