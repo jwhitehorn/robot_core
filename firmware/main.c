@@ -52,7 +52,7 @@ void processCommandBuffer(){
         byte = byte > 0 ? 1 : 0;    //ensure only 1-bit
         PORTB |= (byte<<HOST_PIN); 
       }else if(reg == REG_M1PW){
-        OCR0A = byte * 2;
+        OCR0A = byte;
       }
       clearBuffer();
     }//else, wait for more bytes...
