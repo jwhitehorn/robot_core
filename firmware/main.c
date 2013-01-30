@@ -4,6 +4,11 @@
 #include <avr/interrupt.h>
 #include <util/delay.h>
 
+#define output_low(port,pin) port &= ~(1<<pin)
+#define output_high(port,pin) port |= (1<<pin)
+#define set_input(portdir,pin) portdir &= ~(1<<pin)
+#define set_output(portdir,pin) portdir |= (1<<pin)
+
 //SPI
 #define CTRL_PORT   DDRB 
 #define DATA_PORT   PORTB 
@@ -26,7 +31,7 @@ char command_buffer[MAX_COMMAND_LEN];
 int command_length = 0;
 
 void clearBuffer(){
-    command_length = 0;
+    command_length = 1; //since we're ignoring the first byte, just skip it and assume 0
     for(int i = 0; i != MAX_COMMAND_LEN; i++) command_buffer[i] = 0x00; //clear buffer
 }
 
@@ -47,7 +52,7 @@ void processCommandBuffer(){
         byte = byte > 0 ? 1 : 0;    //ensure only 1-bit
         PORTB |= (byte<<HOST_PIN); 
       }else if(reg == REG_M1PW){
-        OCR0A = byte;
+        OCR0A = byte * 2;
       }
       clearBuffer();
     }//else, wait for more bytes...
@@ -63,17 +68,24 @@ void processCommandBuffer(){
   }
 }
 
-//main run-loop of the firmware
-void runLoop(){
-  while ((USISR & (1 << USIOIF)) == 0) {}; // Do nothing until USI has data ready
-  
+ISR(USI_OVERFLOW_vect){
+  int byte = USIDR / 2;
+  USISR = (1<<USIOIF);
+  USIDR = byte;
+/*
+  for(int i = 0; i != byte; i++){
+    output_high(PORTD, PD5);
+    _delay_ms(1000);
+    output_low(PORTD, PD5);
+    _delay_ms(1000);
+  }
+  */
   if(command_length < MAX_COMMAND_LEN){ //do not allow overflow, no command should be this long
-    command_buffer[command_length++] = USIDR;
+    command_buffer[command_length++] = byte;
     processCommandBuffer();
   }else{
     clearBuffer();
   } 
-  USISR = _BV(USIOIF); //Clear the overflow flag 
 }
 
 int main(void){
@@ -87,11 +99,17 @@ int main(void){
   DDRB |= (1<<HOST_PIN);          // make host pin an output
   PORTB |= (0<<HOST_PIN);         // host pin starts low
 
+  set_output(DDRD, PD5);
+  output_high(PORTD, PD5);
+  _delay_ms(1000);
+  output_low(PORTD, PD5);
+
   //Setup SPI/USI
   CTRL_PORT |= _BV(DO_PIN);
-  USICR = _BV(USIWM0) | _BV(USICS0) | _BV(USICS1);
-  USISR = _BV(USIOIF);
+  USICR = _BV(USIOIE) | _BV(USIWM0) | _BV(USICS0) | _BV(USICS1);
+  USISR = (1<<USIOIF);
 
   clearBuffer();
-  while(1){ runLoop(); }
+  sei();
+  while(1);
 }
