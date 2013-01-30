@@ -37,7 +37,7 @@ void clearBuffer(){
 }
 
 void processCommandBuffer(){
-  if(command_length < 3) return;    //no command is this short
+  if(command_length < 2) return;    //no command is this short
   
   int op_code = command_buffer[1];  //first byte of op-code isn't implemented yet
 
@@ -50,8 +50,11 @@ void processCommandBuffer(){
       int reg = command_buffer[2];
       int byte = command_buffer[3];
       if(reg == 0x00){              //0x00 is undocumented, used for debugging. It echoes the received bit on the host pin.
-        byte = byte > 0 ? 1 : 0;    //ensure only 1-bit
-        PORTB |= (byte<<HOST_PIN); 
+        if(byte > 0){
+          output_high(PORTB, HOST_PIN);
+          }else{
+            output_low(PORTB, HOST_PIN);
+          }
       }else if(reg == REG_M1PW){
         OCR0A = byte;
       }
@@ -62,7 +65,7 @@ void processCommandBuffer(){
     * CLRH - Clear Host Pin - Resets the host pin. E.g., it sets it low.
     * Command length: 2 bytes
     */
-    PORTB |= (0<<HOST_PIN);
+    output_low(PORTB, HOST_PIN);
     clearBuffer();
   }else{ //unknown op code
     clearBuffer();
