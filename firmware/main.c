@@ -16,7 +16,7 @@
 #define DI_PIN      PB5 
 #define DO_PIN      PB6 
 
-#define HOST_PIN    PB3
+#define HOST_PIN    PD1
 #define DEBUG_PIN   PD0
 
 //registers
@@ -51,9 +51,9 @@ void processCommandBuffer(){
       int byte = command_buffer[3];
       if(reg == 0x00){              //0x00 is undocumented, used for debugging. It echoes the received bit on the host pin.
         if(byte > 0){
-          output_high(PORTB, HOST_PIN);
+          output_high(PORTD, HOST_PIN);
           }else{
-            output_low(PORTB, HOST_PIN);
+            output_low(PORTD, HOST_PIN);
           }
       }else if(reg == REG_M1PW){
         OCR0A = byte;
@@ -65,7 +65,7 @@ void processCommandBuffer(){
     * CLRH - Clear Host Pin - Resets the host pin. E.g., it sets it low.
     * Command length: 2 bytes
     */
-    output_low(PORTB, HOST_PIN);
+    output_low(PORTD, HOST_PIN);
     clearBuffer();
   }else{ //unknown op code
     clearBuffer();
@@ -100,8 +100,8 @@ int main(void){
   OCR0A = 0x00;                   //duty cycle
   TCCR0B |= (1<<CS00);            // no prescaling
   
-  DDRB |= (1<<HOST_PIN);          // make host pin an output
-  PORTB |= (0<<HOST_PIN);         // host pin starts low
+  set_output(DDRD, HOST_PIN);
+  output_low(PORTD, HOST_PIN);
 
   //Setup SPI/USI
   CTRL_PORT |= _BV(DO_PIN);

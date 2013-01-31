@@ -6137,13 +6137,13 @@ We've spent an enormous amount of time creating and checking these footprints an
 <net name="N$2" class="0">
 <segment>
 <pinref part="JP1" gate="A" pin="11"/>
-<wire x1="68.58" y1="93.98" x2="68.58" y2="86.36" width="0.1524" layer="91" style="shortdash"/>
-<wire x1="68.58" y1="86.36" x2="76.2" y2="86.36" width="0.1524" layer="91" style="shortdash"/>
-<wire x1="76.2" y1="86.36" x2="76.2" y2="60.96" width="0.1524" layer="91" style="shortdash"/>
-<pinref part="ATTINY" gate="G$1" pin="15"/>
-<wire x1="76.2" y1="60.96" x2="66.04" y2="60.96" width="0.1524" layer="91" style="shortdash"/>
-<junction x="66.04" y="60.96"/>
+<wire x1="68.58" y1="93.98" x2="68.58" y2="81.28" width="0.1524" layer="91" style="shortdash"/>
+<wire x1="68.58" y1="81.28" x2="48.26" y2="81.28" width="0.1524" layer="91" style="shortdash"/>
+<wire x1="48.26" y1="81.28" x2="48.26" y2="68.58" width="0.1524" layer="91" style="shortdash"/>
 <junction x="68.58" y="93.98"/>
+<pinref part="ATTINY" gate="G$1" pin="3"/>
+<wire x1="48.26" y1="68.58" x2="50.8" y2="68.58" width="0.1524" layer="91"/>
+<junction x="50.8" y="68.58"/>
 </segment>
 </net>
 <net name="N$13" class="0">
