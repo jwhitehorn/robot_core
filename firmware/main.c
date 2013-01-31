@@ -103,11 +103,6 @@ int main(void){
   DDRB |= (1<<HOST_PIN);          // make host pin an output
   PORTB |= (0<<HOST_PIN);         // host pin starts low
 
-  set_output(DDRD, DEBUG_PIN);
-  output_high(PORTD, DEBUG_PIN);
-  _delay_ms(1000);
-  output_low(PORTD, DEBUG_PIN);
-
   //Setup SPI/USI
   CTRL_PORT |= _BV(DO_PIN);
   USICR = _BV(USIOIE) | _BV(USIWM0) | _BV(USICS0) | _BV(USICS1);
@@ -115,5 +110,10 @@ int main(void){
 
   clearBuffer();
   sei();
+  
+  set_output(DDRD, DEBUG_PIN);
+  output_high(PORTD, DEBUG_PIN);
+  _delay_ms(1000);
+  output_low(PORTD, DEBUG_PIN);  
   while(1);
 }
