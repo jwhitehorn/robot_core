@@ -105,7 +105,7 @@ int main(void){
 
   DDRB |= (1<<PB3);
   TCCR1B = 0;
-  TCCR1A = (1<<WGM00)|(1<<WGM01);
+  TCCR1A = (1<<WGM00);
   TCCR1A |= (1<<COM1A1);
   OCR1A = 0x00;
   TCCR1B |= (1<<CS00);
