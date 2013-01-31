@@ -21,6 +21,7 @@
 
 //registers
 #define REG_M1PW   0x01
+#define REG_M2PW   0x02
 
 //op codes
 #define REGW       0x01
@@ -57,6 +58,8 @@ void processCommandBuffer(){
           }
       }else if(reg == REG_M1PW){
         OCR0A = byte;
+      }else if(reg == REG_M2PW){
+        OCR1A = byte;
       }
       clearBuffer();
     }//else, wait for more bytes...
