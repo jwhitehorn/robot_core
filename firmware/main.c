@@ -99,6 +99,13 @@ int main(void){
   TCCR0A |= (1<<COM0A1);          //Clear OC0A on Compare Match when up-counting. Set OC0A on Compare Match when down-counting.
   OCR0A = 0x00;                   //duty cycle
   TCCR0B |= (1<<CS00);            // no prescaling
+
+  DDRB |= (1<<PB3);
+  TCCR1B = 0;
+  TCCR1A = (1<<WGM00)|(1<<WGM01);
+  TCCR1A |= (1<<COM1A1);
+  OCR1A = 0x00;
+  TCCR1B |= (1<<CS00);
   
   set_output(DDRD, HOST_PIN);
   output_low(PORTD, HOST_PIN);
