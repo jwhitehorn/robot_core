@@ -28,6 +28,42 @@
 #define CLRH       0x02
 
 
+/*
+
+Since the tiny (or any AVR) is limited on RAM, instead of a full blown general purpose bytecode, do the following:
+
+Add the following commands:
+
+RIFL x - raise the host pin if pin x is low
+RIFH x - raise the host pin if pin x is high
+RILT x, y - raise the host pin if analog pin x is less than y
+RIGT x, y - raise the host pin if analog pin x is greater than y
+REGWIFL x, y, z - writes y to register x if pin z is low
+REGWIFH x, y, z - writes y to register x if pin z is high
+REGWIFLT x, y, z, a - writes y to register x if pin z is less than a
+REGWIFGT x, y, z, a - writes y to register x if pin z is greater than a
+
+In fact, refactor the above to treat pins as registers to make it more general purpose.
+
+Have the main run-loop of the app just poll various pins and check various registers based on
+a table that the "processCommand" function esthablishes via direction of the host.
+
+The refactored commands might look like:
+
+RIFEQ x, y - raise the host pin if register x is equal to y (binary pins will have their registers either be 0x00 or 0x01)
+RIFLT x, y - raise the host pin if register x is less than y
+RIFGT x, y - raise the host pin if register x is greater than y
+REGWIFEQ w, x, y, z - writes x to register w if register y is equal to z
+REGWIFLT w, x, y, z - writes x to register w if register y is less than z
+REGWIFGT w, x, y, z - writes x to register w if register y is greater than z
+
+This will mean we'll need "registers" for each GPIO & analog pin.
+
+Later we can add timers as registers too.
+  
+*/
+
+
 #define MAX_COMMAND_LEN 10
 char command_buffer[MAX_COMMAND_LEN];
 int command_length = 0;
