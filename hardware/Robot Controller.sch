@@ -7119,6 +7119,11 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <wire x1="81.28" y1="88.9" x2="81.28" y2="93.98" width="0.1524" layer="91"/>
 <junction x="81.28" y="93.98"/>
 <junction x="66.04" y="68.58"/>
+<pinref part="JP5" gate="A" pin="5"/>
+<wire x1="83.82" y1="81.28" x2="114.3" y2="81.28" width="0.1524" layer="91"/>
+<wire x1="114.3" y1="81.28" x2="114.3" y2="96.52" width="0.1524" layer="91"/>
+<junction x="83.82" y="81.28"/>
+<junction x="114.3" y="96.52"/>
 </segment>
 </net>
 <net name="N$7" class="0">
