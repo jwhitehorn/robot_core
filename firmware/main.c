@@ -20,8 +20,10 @@
 #define DEBUG_PIN   PD0
 
 //registers
-#define REG_M1PW   0x01
-#define REG_M2PW   0x02
+#define REG_M1PW   0x01  //motor 1, pulse width
+#define REG_M2PW   0x02  //motor 2, pulse width
+#define REG_M1DR   0x03  //motor 1, direction
+#define REG_M2DR   0x04  //motor 2, direction
 
 //op codes
 #define REGW       0x01
@@ -89,13 +91,25 @@ void processCommandBuffer(){
       if(reg == 0x00){              //0x00 is undocumented, used for debugging. It echoes the received bit on the host pin.
         if(byte > 0){
           output_high(PORTD, HOST_PIN);
-          }else{
-            output_low(PORTD, HOST_PIN);
-          }
+        }else{
+          output_low(PORTD, HOST_PIN);
+        }
       }else if(reg == REG_M1PW){
         OCR0A = byte;
       }else if(reg == REG_M2PW){
         OCR1A = byte;
+      }else if(reg == REG_M1DR){
+        if(byte > 0){
+          output_high(PORTA, PA1);
+          }else{
+            output_low(PORTA, PA1);
+          }
+      }else if(reg == REG_M2DR){
+        if(byte > 0){
+          output_high(PORTA, PA0);
+        }else{
+          output_low(PORTA, PA0);
+        }
       }
       clearBuffer();
     }//else, wait for more bytes...
@@ -156,6 +170,11 @@ int main(void){
 
   clearBuffer();
   sei();
+  
+  set_output(DDRA, PA1);
+  set_low(PORTA, PA1);
+  set_output(DDRA, PA0);
+  set_low(PORTA, PA0);
   
   set_output(DDRD, DEBUG_PIN);
   output_high(PORTD, DEBUG_PIN);
