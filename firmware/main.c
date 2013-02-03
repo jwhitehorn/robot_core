@@ -101,9 +101,9 @@ void processCommandBuffer(){
       }else if(reg == REG_M1DR){
         if(byte > 0){
           output_high(PORTA, PA1);
-          }else{
-            output_low(PORTA, PA1);
-          }
+        }else{
+          output_low(PORTA, PA1);
+        }
       }else if(reg == REG_M2DR){
         if(byte > 0){
           output_high(PORTA, PA0);
