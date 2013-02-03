@@ -172,9 +172,9 @@ int main(void){
   sei();
   
   set_output(DDRA, PA1);
-  set_low(PORTA, PA1);
+  output_low(PORTA, PA1);
   set_output(DDRA, PA0);
-  set_low(PORTA, PA0);
+  output_low(PORTA, PA0);
   
   set_output(DDRD, DEBUG_PIN);
   output_high(PORTD, DEBUG_PIN);
