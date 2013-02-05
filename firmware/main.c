@@ -68,14 +68,14 @@ Later we can add timers as registers too.
 
 
 #define MAX_COMMAND_LEN 10
-char command_buffer[MAX_COMMAND_LEN];
+char command_buffer[MAX_COMMAND_LEN] = {0};
 int command_length = 0;
 
-/*
+
 #define TABLE_SIZE 10
 char table[TABLE_SIZE][MAX_COMMAND_LEN];
 int table_size = 0;
-*/
+
 
 void clearBuffer(){
     command_length = 1; //since we're ignoring the first byte, just skip it and assume 0
@@ -127,7 +127,7 @@ void processCommandBuffer(){
     */
     output_low(PORTD, HOST_PIN);
     clearBuffer();
-  }/*else if(op_code == RIFEQ){
+  }else if(op_code == RIFEQ){
     if(command_length >= 4){
       int tableEntry = table_size++;
       //TODO: check for overflow
@@ -136,7 +136,7 @@ void processCommandBuffer(){
       }
       clearBuffer();
     }
-  }*/else{ //unknown op code
+  }else{ //unknown op code
     clearBuffer();
   }
 }
