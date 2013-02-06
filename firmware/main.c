@@ -192,9 +192,15 @@ int main(void){
   set_output(DDRA, PA0);
   output_low(PORTA, PA0);
   
+  //blink to signal ready...
   set_output(DDRD, DEBUG_PIN);
   output_high(PORTD, DEBUG_PIN);
   _delay_ms(1000);
   output_low(PORTD, DEBUG_PIN);  
-  while(1);
+  //ready!
+  while(1){
+    for(int i = 0; i != table_size; i++){
+      //compare
+    }
+  }
 }
