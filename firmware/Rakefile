@@ -1,0 +1,10 @@
+desc "Compiles firmware"
+task :build do
+  puts `avr-gcc -std=c99 -O2 -Os -mmcu=attiny2313 -o main.elf main.c && avr-objcopy -R .eeprom -O ihex main.elf firmware.hex`
+end
+
+
+desc "Load firmware onto uC"
+task :install do
+  puts `avrdude -p attiny2313 -c gpio -v -U flash:w:firmware.hex`
+end
