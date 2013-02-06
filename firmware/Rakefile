@@ -1,10 +1,24 @@
+UC_TARGET = "atmega328p"
+PROGRAMMER = "usbtiny"
+
 desc "Compiles firmware"
-task :build do
-  puts `avr-gcc -std=c99 -O2 -Os -mmcu=attiny2313 -o main.elf main.c && avr-objcopy -R .eeprom -O ihex main.elf firmware.hex`
+task :build => [:clean] do
+  puts `avr-gcc -std=c99 -O2 -Os -mmcu=#{UC_TARGET} -o main.elf main.c && avr-objcopy -R .eeprom -O ihex main.elf firmware.hex`
 end
 
 
 desc "Load firmware onto uC"
 task :install do
-  puts `avrdude -p attiny2313 -c gpio -v -U flash:w:firmware.hex`
+  if File.exists? 'firmware.hex'
+    puts `avrdude -p #{UC_TARGET} -c #{PROGRAMMER} -v -U flash:w:firmware.hex`
+  else
+    puts "Cannot upload firmware, firmware.hex not present. Did you forget to run build? A compiler error perhaps?"
+  end
 end
+
+task :clean do
+  ['main.elf', 'firmware.hex'].each { |file| File.delete(file) if File.exists?(file) }
+end
+
+task :all => [:build, :install]
+task :default => [:all]
