@@ -3,11 +3,7 @@
 #include <inttypes.h>
 #include <avr/interrupt.h>
 #include <util/delay.h>
-
-#define output_low(port,pin) port &= ~(1<<pin)
-#define output_high(port,pin) port |= (1<<pin)
-#define set_input(portdir,pin) portdir &= ~(1<<pin)
-#define set_output(portdir,pin) portdir |= (1<<pin)
+#include "helpers.h"
 
 //SPI
 #define CTRL_PORT   DDRB 
@@ -16,8 +12,15 @@
 #define DI_PIN      PB5 
 #define DO_PIN      PB6 
 
-#define HOST_PIN    PD1
-#define DEBUG_PIN   PD0
+#define HOST_PIN    PORTD, PD1
+#define DEBUG_PIN   PORTD, PD0
+#ifdef ATTINY
+#define M1DR_PIN    PORTA, PA1
+#define M2DR_PIN    PORTA, PA0
+#else
+#define M1DR_PIN    PORTD, PD2
+#define M2DR_PIN    PORTD, PD3
+#endif
 
 //registers
 #define REG_M1PW   0x01  //motor 1, pulse width
@@ -97,9 +100,9 @@ void processCommandBuffer(){
       int byte = command_buffer[3];
       if(reg == 0x00){              //0x00 is undocumented, used for debugging. It echoes the received bit on the host pin.
         if(byte > 0){
-          output_high(PORTD, HOST_PIN);
+          output_high(HOST_PIN);
         }else{
-          output_low(PORTD, HOST_PIN);
+          output_low(HOST_PIN);
         }
       }else if(reg == REG_M1PW){
         OCR0A = byte;
@@ -107,15 +110,15 @@ void processCommandBuffer(){
         OCR1A = byte;
       }else if(reg == REG_M1DR){
         if(byte > 0){
-          output_high(PORTA, PA1);
+          output_high(M1DR_PIN);
         }else{
-          output_low(PORTA, PA1);
+          output_low(M1DR_PIN);
         }
       }else if(reg == REG_M2DR){
         if(byte > 0){
-          output_high(PORTA, PA0);
+          output_high(M2DR_PIN);
         }else{
-          output_low(PORTA, PA0);
+          output_low(M2DR_PIN);
         }
       }
       clearBuffer();
@@ -125,7 +128,7 @@ void processCommandBuffer(){
     * CLRH - Clear Host Pin - Resets the host pin. E.g., it sets it low.
     * Command length: 2 bytes
     */
-    output_low(PORTD, HOST_PIN);
+    output_low(HOST_PIN);
     clearBuffer();
   }else if(op_code == RIFEQ){
     if(command_length >= 4){
@@ -176,8 +179,8 @@ int main(void){
   OCR1A = 0x00;
   TCCR1B |= (1<<CS00);
   
-  set_output(DDRD, HOST_PIN);
-  output_low(PORTD, HOST_PIN);
+  set_output(HOST_PIN);
+  output_low(HOST_PIN);
 
   //Setup SPI/USI
   CTRL_PORT |= _BV(DO_PIN);
@@ -187,16 +190,16 @@ int main(void){
   clearBuffer();
   sei();
   
-  set_output(DDRA, PA1);
-  output_low(PORTA, PA1);
-  set_output(DDRA, PA0);
-  output_low(PORTA, PA0);
+  set_output(M1DR_PIN);
+  output_low(M1DR_PIN);
+  set_output(M2DR_PIN);
+  output_low(M2DR_PIN);
   
   //blink to signal ready...
-  set_output(DDRD, DEBUG_PIN);
-  output_high(PORTD, DEBUG_PIN);
+  set_output(DEBUG_PIN);
+  output_high(DEBUG_PIN);
   _delay_ms(1000);
-  output_low(PORTD, DEBUG_PIN);  
+  output_low(DEBUG_PIN);  
   //ready!
   while(1){
     for(int i = 0; i != table_size; i++){
