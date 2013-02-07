@@ -3,7 +3,7 @@ PROGRAMMER = "usbtiny"
 
 desc "Compiles firmware"
 task :build => [:clean] do
-  puts `avr-gcc -std=c99 -O2 -Os -mmcu=#{UC_TARGET} -o main.elf main.c && avr-objcopy -R .eeprom -O ihex main.elf firmware.hex`
+  puts `avr-gcc -std=c99 -O2 -Os -mmcu=#{UC_TARGET} -o main.elf spi.c main.c && avr-objcopy -R .eeprom -O ihex main.elf firmware.hex`
 end
 
 
