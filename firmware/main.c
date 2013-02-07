@@ -3,6 +3,7 @@
 #include <inttypes.h>
 #include <avr/interrupt.h>
 #include <util/delay.h>
+#include "spi.h"
 #include "helpers.h"
 
 //SPI
@@ -11,16 +12,6 @@
 #define CLK_PIN     PB7 
 #define DI_PIN      PB5 
 #define DO_PIN      PB6 
-
-#define HOST_PIN    PORTD, PD1
-#define DEBUG_PIN   PORTD, PD0
-#ifdef ATTINY
-#define M1DR_PIN    PORTA, PA1
-#define M2DR_PIN    PORTA, PA0
-#else
-#define M1DR_PIN    PORTD, PD2
-#define M2DR_PIN    PORTD, PD3
-#endif
 
 //registers
 #define REG_M1PW   0x01  //motor 1, pulse width
@@ -100,9 +91,9 @@ void processCommandBuffer(){
       int byte = command_buffer[3];
       if(reg == 0x00){              //0x00 is undocumented, used for debugging. It echoes the received bit on the host pin.
         if(byte > 0){
-          output_high(HOST_PIN);
+          outputHigh(HOST_PIN);
         }else{
-          output_low(HOST_PIN);
+          outputLow(HOST_PIN);
         }
       }else if(reg == REG_M1PW){
         OCR0A = byte;
@@ -110,15 +101,15 @@ void processCommandBuffer(){
         OCR1A = byte;
       }else if(reg == REG_M1DR){
         if(byte > 0){
-          output_high(M1DR_PIN);
+          outputHigh(M1DR_PIN);
         }else{
-          output_low(M1DR_PIN);
+          outputLow(M1DR_PIN);
         }
       }else if(reg == REG_M2DR){
         if(byte > 0){
-          output_high(M2DR_PIN);
+          outputHigh(M2DR_PIN);
         }else{
-          output_low(M2DR_PIN);
+          outputLow(M2DR_PIN);
         }
       }
       clearBuffer();
@@ -128,7 +119,7 @@ void processCommandBuffer(){
     * CLRH - Clear Host Pin - Resets the host pin. E.g., it sets it low.
     * Command length: 2 bytes
     */
-    output_low(HOST_PIN);
+    outputLow(HOST_PIN);
     clearBuffer();
   }else if(op_code == RIFEQ){
     if(command_length >= 4){
@@ -144,18 +135,9 @@ void processCommandBuffer(){
   }
 }
 
-ISR(USI_OVERFLOW_vect){
-  int byte = USIDR / 2;
-  USISR = (1<<USIOIF);
-  USIDR = byte;
-/*
-  for(int i = 0; i != byte; i++){
-    output_high(PORTD, DEBUG_PIN);
-    _delay_ms(1000);
-    output_low(PORTD, DEBUG_PIN);
-    _delay_ms(1000);
-  }
-  */
+ISR(SPI_VECTOR){
+  int byte = spiReceived();
+
   if(command_length < MAX_COMMAND_LEN){ //do not allow overflow, no command should be this long
     command_buffer[command_length++] = byte;
     processCommandBuffer();
@@ -179,31 +161,30 @@ int main(void){
   OCR1A = 0x00;
   TCCR1B |= (1<<CS00);
   
-  set_output(HOST_PIN);
-  output_low(HOST_PIN);
+  setOutput(HOST_PIN);
+  outputLow(HOST_PIN);
 
   //Setup SPI/USI
   CTRL_PORT |= _BV(DO_PIN);
-  USICR = _BV(USIOIE) | _BV(USIWM0) | _BV(USICS0) | _BV(USICS1);
-  USISR = (1<<USIOIF);
+  setupSpi();
 
   clearBuffer();
   sei();
   
-  set_output(M1DR_PIN);
-  output_low(M1DR_PIN);
-  set_output(M2DR_PIN);
-  output_low(M2DR_PIN);
+  setOutput(M1DR_PIN);
+  outputLow(M1DR_PIN);
+  setOutput(M2DR_PIN);
+  outputLow(M2DR_PIN);
   
   //blink to signal ready...
-  set_output(DEBUG_PIN);
-  output_high(DEBUG_PIN);
-  _delay_ms(1000);
-  output_low(DEBUG_PIN);  
+  setOutput(DEBUG_PIN);
+  outputHigh(DEBUG_PIN);
+  sleep(1000);
+  outputLow(DEBUG_PIN);  
   //ready!
   while(1){
     for(int i = 0; i != table_size; i++){
-      //compare
+      //TODO: compare
     }
   }
 }
