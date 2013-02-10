@@ -136,7 +136,7 @@ void processCommandBuffer(){
 }
 
 ISR(SPI_VECTOR){
-  int byte = spiReceived();
+  int byte = spiReceived() / 2;
 
   if(command_length < MAX_COMMAND_LEN){ //do not allow overflow, no command should be this long
     command_buffer[command_length++] = byte;
@@ -165,7 +165,7 @@ int main(void){
   outputLow(HOST_PIN);
 
   //Setup SPI/USI
-  CTRL_PORT |= _BV(DO_PIN);
+  //CTRL_PORT |= _BV(DO_PIN);
   setupSpi();
 
   clearBuffer();
