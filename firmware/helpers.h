@@ -37,10 +37,16 @@ void setupSpi(){
 
 
 //General helpers:
-void outputLow(int port, int pin){ port &= ~(1<<pin); }
-void outputHigh(int port, int pin){ port |= (1<<pin); }
-void setInput(int portdir, int pin){ portdir &= ~(1<<pin); }
-void setOutput(int portdir, int pin){ portdir |= (1<<pin); }
+#define __output_low(port,pin) port &= ~(1<<pin)    
+#define __output_high(port,pin) port |= (1<<pin)
+#define __set_input(portdir,pin) portdir &= ~(1<<pin)
+#define __set_output(portdir,pin) portdir |= (1<<pin)
+
+#define outputLow(pin) __output_low(pin)
+#define outputHigh(pin) __output_high(pin)
+#define setInput(pin) __set_input(pin)
+#define setOutput(pin) __set_output(pin)
+
 #define sleep _delay_ms
 
 //Pins:
