@@ -180,7 +180,7 @@ int main(void){
   setOutput(DEBUG_PIN);
   outputHigh(DEBUG_PIN);
   sleep(1000);
-  outputLow(DEBUG_PIN);  
+  outputLow(DEBUG_PIN);
   //ready!
   while(1){
     for(int i = 0; i != table_size; i++){

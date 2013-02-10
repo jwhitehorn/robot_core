@@ -37,10 +37,10 @@ void setupSpi(){
 
 
 //General helpers:
-#define __output_low(port,pin) port &= ~(1<<pin)    
-#define __output_high(port,pin) port |= (1<<pin)
-#define __set_input(portdir,pin) portdir &= ~(1<<pin)
-#define __set_output(portdir,pin) portdir |= (1<<pin)
+#define __output_low(port,pin, portdir) port &= ~(1<<pin)    
+#define __output_high(port,pin, portdir) port |= (1<<pin)
+#define __set_input(port, pin, portdir) portdir &= ~(1<<pin)
+#define __set_output(port, pin, portdir) portdir |= (1<<pin)
 
 #define outputLow(pin) __output_low(pin)
 #define outputHigh(pin) __output_high(pin)
@@ -50,12 +50,12 @@ void setupSpi(){
 #define sleep _delay_ms
 
 //Pins:
-#define HOST_PIN    PORTD, PD1
-#define DEBUG_PIN   PORTD, PD0
+#define HOST_PIN    PORTD, PD1, DDRD
+#define DEBUG_PIN   PORTD, PD0, DDRD
 #ifdef ATTINY
-#define M1DR_PIN    PORTA, PA1
-#define M2DR_PIN    PORTA, PA0
+#define M1DR_PIN    PORTA, PA1, DDRA
+#define M2DR_PIN    PORTA, PA0, DDRA
 #else
-#define M1DR_PIN    PORTD, PD2
-#define M2DR_PIN    PORTD, PD3
+#define M1DR_PIN    PORTD, PD2, DDRD
+#define M2DR_PIN    PORTD, PD3, DDRD
 #endif
