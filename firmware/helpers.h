@@ -19,7 +19,8 @@ int spiReceived(){
   USIDR = byte;
   return byte;
   #else
-  return SPDR;  //not sure if this is right yet...
+  SPDR = 0x00;  
+  return SPDR; 
   #endif
 }
 
@@ -28,10 +29,7 @@ void setupSpi(){
   USICR = _BV(USIOIE) | _BV(USIWM0) | _BV(USICS0) | _BV(USICS1);
   USISR = (1<<USIOIF);
   #else
-  //not sure if the atmega code is right...
-  /*
-  EICRB = (1<<ISC01) | (0<<ISC00);
-  EIMSK |= (1<<INT0);*/
+  setup_spi(SPI_MODE_1, SPI_MSB, SPI_INTERRUPT, SPI_SLAVE);
   #endif
 }
 
