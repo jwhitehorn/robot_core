@@ -147,7 +147,7 @@ ISR(SPI_VECTOR){
 }
 
 int main(void){
-  DDRB |= (1<<PB2);               // make OC0A an output
+  setOutput(M1PW_PIN);
   TCCR0B = 0;                     // stop timer 0
   TCCR0A = (1<<WGM00)|(1<<WGM01); // select fast pwm mode 3
   TCCR0A |= (1<<COM0A1);          //Clear OC0A on Compare Match when up-counting. Set OC0A on Compare Match when down-counting.

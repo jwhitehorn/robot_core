@@ -53,7 +53,9 @@ void setupSpi(){
 #ifdef ATTINY
 #define M1DR_PIN    PORTA, PA1, DDRA
 #define M2DR_PIN    PORTA, PA0, DDRA
+#define M1PW_PIN    PORTB, PB2, DDRB
 #else
 #define M1DR_PIN    PORTD, PD2, DDRD
 #define M2DR_PIN    PORTD, PD3, DDRD
+#define M1PW_PIN    PORTD, PD6, DDRD
 #endif
