@@ -6735,6 +6735,7 @@ This is the through-hole version of this chip.</description>
 <part name="SUPPLY8" library="SparkFun-Aesthetics" deviceset="3.3V" device=""/>
 <part name="GND11" library="SparkFun-Aesthetics" deviceset="GND" device=""/>
 <part name="GND13" library="SparkFun-Aesthetics" deviceset="GND" device=""/>
+<part name="JP7" library="pinhead" deviceset="PINHD-2X13" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -6810,6 +6811,7 @@ This is the through-hole version of this chip.</description>
 <instance part="SUPPLY8" gate="G$1" x="27.94" y="30.48" rot="R90"/>
 <instance part="GND11" gate="1" x="25.4" y="-15.24" rot="R270"/>
 <instance part="GND13" gate="1" x="27.94" y="-20.32"/>
+<instance part="JP7" gate="A" x="127" y="114.3" rot="R90"/>
 </instances>
 <busses>
 </busses>
