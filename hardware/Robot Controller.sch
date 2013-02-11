@@ -6767,12 +6767,11 @@ This is the through-hole version of this chip.</description>
 <text x="83.82" y="-17.78" size="1.778" layer="95">MISO'</text>
 <text x="83.82" y="-15.24" size="1.778" layer="95">MOSI'</text>
 <text x="83.82" y="-20.32" size="1.778" layer="95">SCL'</text>
-<text x="83.82" y="7.62" size="1.778" layer="95">M2PW'</text>
-<text x="83.82" y="2.54" size="1.778" layer="95">M1PW'</text>
+<text x="83.82" y="0" size="1.778" layer="95">M1PW'</text>
 <text x="83.82" y="15.24" size="1.778" layer="95">DEBUG'</text>
 <text x="83.82" y="12.7" size="1.778" layer="95">HOST'</text>
-<text x="83.82" y="0" size="1.778" layer="95">M1DR'</text>
-<text x="83.82" y="-2.54" size="1.778" layer="95">M2DR'</text>
+<text x="83.82" y="10.16" size="1.778" layer="95">M1DR'</text>
+<text x="83.82" y="7.62" size="1.778" layer="95">M2DR'</text>
 </plain>
 <instances>
 <instance part="L293D" gate="G$1" x="-25.4" y="20.32"/>
@@ -7146,8 +7145,8 @@ This is the through-hole version of this chip.</description>
 <junction x="-33.02" y="27.94"/>
 </segment>
 <segment>
-<pinref part="U1" gate="G$1" pin="PD5(T1)"/>
-<wire x1="81.28" y1="2.54" x2="88.9" y2="2.54" width="0.1524" layer="91"/>
+<pinref part="U1" gate="G$1" pin="PD6(AIN0)"/>
+<wire x1="81.28" y1="0" x2="88.9" y2="0" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="M2PW'" class="0">
@@ -7159,10 +7158,6 @@ This is the through-hole version of this chip.</description>
 <pinref part="L293D" gate="G$1" pin="9"/>
 <wire x1="-10.16" y1="10.16" x2="-17.78" y2="10.16" width="0.1524" layer="91"/>
 <junction x="-17.78" y="10.16"/>
-</segment>
-<segment>
-<pinref part="U1" gate="G$1" pin="PD3(INT1)"/>
-<wire x1="81.28" y1="7.62" x2="88.9" y2="7.62" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="M1DR'" class="0">
@@ -7176,8 +7171,8 @@ This is the through-hole version of this chip.</description>
 <wire x1="-33.02" y1="12.7" x2="-40.64" y2="12.7" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="U1" gate="G$1" pin="PD6(AIN0)"/>
-<wire x1="81.28" y1="0" x2="88.9" y2="0" width="0.1524" layer="91"/>
+<pinref part="U1" gate="G$1" pin="PD2(INT0)"/>
+<wire x1="81.28" y1="10.16" x2="88.9" y2="10.16" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="M2DR'" class="0">
@@ -7192,8 +7187,8 @@ This is the through-hole version of this chip.</description>
 <junction x="-22.86" y="66.04"/>
 </segment>
 <segment>
-<pinref part="U1" gate="G$1" pin="PD7(AIN1)"/>
-<wire x1="81.28" y1="-2.54" x2="88.9" y2="-2.54" width="0.1524" layer="91"/>
+<pinref part="U1" gate="G$1" pin="PD3(INT1)"/>
+<wire x1="81.28" y1="7.62" x2="88.9" y2="7.62" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="DEBUG'" class="0">
