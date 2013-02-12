@@ -154,7 +154,7 @@ int main(void){
   OCR0A = 0x00;                   //duty cycle
   TCCR0B |= (1<<CS00);            // no prescaling
 
-  DDRB |= (1<<PB3);
+  setOutput(M2PW_PIN);
   TCCR1B = 0;
   TCCR1A = (1<<WGM00);
   TCCR1A |= (1<<COM1A1);

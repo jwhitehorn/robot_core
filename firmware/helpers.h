@@ -54,8 +54,10 @@ void setupSpi(){
 #define M1DR_PIN    PORTA, PA1, DDRA
 #define M2DR_PIN    PORTA, PA0, DDRA
 #define M1PW_PIN    PORTB, PB2, DDRB
+#define M2PW_PIN    PORTB, PB6, DDRB
 #else
 #define M1DR_PIN    PORTD, PD2, DDRD
 #define M2DR_PIN    PORTD, PD3, DDRD
 #define M1PW_PIN    PORTD, PD6, DDRD
+#define M2PW_PIN    PORTB, PB1, DDRB
 #endif
