@@ -60,4 +60,5 @@ void setupSpi(){
 #define M2DR_PIN    PORTD, PD3, DDRD
 #define M1PW_PIN    PORTD, PD6, DDRD
 #define M2PW_PIN    PORTB, PB1, DDRB
+#define ADC1_PIN    PORTC, PC1, DDRC
 #endif
