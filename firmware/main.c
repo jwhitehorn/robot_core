@@ -146,15 +146,14 @@ ISR(SPI_VECTOR){
   } 
 }
 
-uint16_t ReadADC(uint8_t ADCchannel)
-{
- //select ADC channel with safety mask
- ADMUX = (ADMUX & 0xF0) | (ADCchannel & 0x0F);
- //single conversion mode
- ADCSRA |= (1<<ADSC);
- // wait until ADC conversion is complete
- while( ADCSRA & (1<<ADSC) );
- return ADC;
+uint16_t ReadADC(uint8_t ADCchannel){
+  //select ADC channel with safety mask
+  ADMUX = (ADMUX & 0xF0) | (ADCchannel & 0x0F);
+  //single conversion mode
+  ADCSRA |= (1<<ADSC);
+  // wait until ADC conversion is complete
+  while( ADCSRA & (1<<ADSC) );
+  return ADC;
 }
 
 int main(void){
@@ -175,10 +174,10 @@ int main(void){
   setOutput(HOST_PIN);
   outputLow(HOST_PIN);
 
- // Select Vref=AVcc
- ADMUX |= (1<<REFS0);
- //set prescaller to 128 and enable ADC 
- ADCSRA |= (1<<ADPS2)|(1<<ADPS1)|(1<<ADPS0)|(1<<ADEN);  
+  // Select Vref=AVcc
+  ADMUX |= (1<<REFS0);
+  //set prescaller to 128 and enable ADC 
+  ADCSRA |= (1<<ADPS2)|(1<<ADPS1)|(1<<ADPS0)|(1<<ADEN);  
 
   //Setup SPI/USI
   //CTRL_PORT |= _BV(DO_PIN);
@@ -199,7 +198,7 @@ int main(void){
   outputLow(DEBUG_PIN);
   //ready!
   while(1){
-    uint16_t adc = ReadADC(1);
-    OCR0A = (adc >> 3);
+    uint16_t adc = ReadADC(0);
+    OCR0A = (adc >> 2);
   }
 }
