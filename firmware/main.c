@@ -1,4 +1,5 @@
 #define F_CPU 8000000UL  // 8 MHz
+#include <stdbool.h>
 #include <avr/io.h>
 #include <inttypes.h>
 #include <avr/interrupt.h>
@@ -76,19 +77,19 @@ void clearBuffer(){
     for(int i = 0; i != MAX_COMMAND_LEN; i++) command_buffer[i] = 0x00; //clear buffer
 }
 
-void processCommandBuffer(){
-  if(command_length < 2) return;    //no command is this short
+bool processCommand(char *command, int length){
+  if(length < 2) return false;    //no command is this short
   
-  int op_code = command_buffer[1];  //first byte of op-code isn't implemented yet
+  int op_code = command[1];  //first byte of op-code isn't implemented yet
 
   if(op_code == REGW){
     /*
     * REGW - Register Write - Writes byte 4 to the register specified in byte 3
     * Command length: 4 bytes
     */
-    if(command_length >= 4){
-      int reg = command_buffer[2];
-      int byte = command_buffer[3];
+    if(length >= 4){
+      int reg = command[2];
+      int byte = command[3];
       if(reg == 0x00){              //0x00 is undocumented, used for debugging. It echoes the received bit on the host pin.
         if(byte > 0){
           outputHigh(HOST_PIN);
@@ -112,7 +113,8 @@ void processCommandBuffer(){
           outputLow(M2DR_PIN);
         }
       }
-      clearBuffer();
+      //clearBuffer();
+      return true;
     }//else, wait for more bytes...
   }else if(op_code == CLRH){
     /*
@@ -120,17 +122,28 @@ void processCommandBuffer(){
     * Command length: 2 bytes
     */
     outputLow(HOST_PIN);
-    clearBuffer();
+    //clearBuffer();
+    return true;
   }else if(op_code == RIFEQ){
-    if(command_length >= 4){
+    if(length >= 4){
       int tableEntry = table_size++;
       //TODO: check for overflow
-      for(int i = 0; i != command_length; i++){
-        table[tableEntry][i] = command_buffer[i]; 
+      for(int i = 0; i != length; i++){
+        table[tableEntry][i] = command[i]; 
       }
-      clearBuffer();
+      //clearBuffer();
+      return true;
     }
   }else{ //unknown op code
+    //clearBuffer();
+    return true; //??
+  }
+  return false;
+}
+
+void processCommandBuffer(){
+  bool result = processCommand(command_buffer, command_length);
+  if(result){
     clearBuffer();
   }
 }
@@ -198,7 +211,9 @@ int main(void){
   outputLow(DEBUG_PIN);
   //ready!
   while(1){
-    uint16_t adc = ReadADC(0);
-    OCR0A = (adc >> 2);
+    //uint16_t adc = ReadADC(0);
+    //OCR0A = (adc >> 2);
+    for(int i = 0; i != table_size; i++){
+    }
   }
 }
