@@ -209,11 +209,13 @@ int main(void){
   outputHigh(DEBUG_PIN);
   sleep(1000);
   outputLow(DEBUG_PIN);
+  
   //ready!
   while(1){
     //uint16_t adc = ReadADC(0);
     //OCR0A = (adc >> 2);
     for(int i = 0; i != table_size; i++){
+      processCommand(table[i], MAX_COMMAND_LEN); 
     }
   }
 }
