@@ -62,3 +62,13 @@ void setupSpi(){
 #define M2PW_PIN    PORTB, PB1, DDRB
 #define ADC1_PIN    PORTC, PC1, DDRC
 #endif
+
+uint16_t ReadADC(uint8_t ADCchannel){
+  //select ADC channel with safety mask
+  ADMUX = (ADMUX & 0xF0) | (ADCchannel & 0x0F);
+  //single conversion mode
+  ADCSRA |= (1<<ADSC);
+  // wait until ADC conversion is complete
+  while( ADCSRA & (1<<ADSC) );
+  return ADC;
+}

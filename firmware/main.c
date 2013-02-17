@@ -19,12 +19,13 @@
 #define REG_M2PW   0x02  //motor 2, pulse width
 #define REG_M1DR   0x03  //motor 1, direction
 #define REG_M2DR   0x04  //motor 2, direction
+#define ADC1       0x05  //ADC 1
 
 //op codes
 #define REGW       0x01
 #define CLRH       0x02
 #define RIFEQ      0x03
-#define RIFL       0x04
+#define RIFLT      0x04
 
 
 /*
@@ -70,6 +71,20 @@ void storeCommandInTable(char *command, int length){
       table[table_entry][i] = command[i];
     }
   }
+}
+
+int compareRegister(int reg, int value){
+  if(reg == ADC1){
+    uint16_t adc = ReadADC(0);
+    adc = (adc >> 2);
+    if(adc < value){
+      return -1;
+    }else if(adc == value){
+      return 0;
+    }
+    return 1;
+  } 
+  return -2;
 }
 
 bool processCommand(char *command, int length, bool store){
@@ -124,10 +139,16 @@ bool processCommand(char *command, int length, bool store){
       if(store){
         storeCommandInTable(command, length);
       }else{
+        int reg = command[2];
+        int value = command[3];
+        int result = compareRegister(reg, value);
+        if(result == 0){
+          outputHigh(HOST_PIN); 
+        }
       }
       return true;
     }
-  }else if(op_code == RIFL){
+  }else if(op_code == RIFLT){
     if(length >= 4){
       if(store){
         storeCommandInTable(command, length);
@@ -158,16 +179,6 @@ ISR(SPI_VECTOR){
   }else{
     clearBuffer();
   } 
-}
-
-uint16_t ReadADC(uint8_t ADCchannel){
-  //select ADC channel with safety mask
-  ADMUX = (ADMUX & 0xF0) | (ADCchannel & 0x0F);
-  //single conversion mode
-  ADCSRA |= (1<<ADSC);
-  // wait until ADC conversion is complete
-  while( ADCSRA & (1<<ADSC) );
-  return ADC;
 }
 
 int main(void){
@@ -213,8 +224,6 @@ int main(void){
   
   //ready!
   while(1){
-    //uint16_t adc = ReadADC(0);
-    //OCR0A = (adc >> 2);
     for(int i = 0; i != table_size; i++){
       processCommand(table[i], MAX_COMMAND_LEN, false); 
     }
