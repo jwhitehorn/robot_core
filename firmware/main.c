@@ -20,12 +20,14 @@
 #define REG_M1DR   0x03  //motor 1, direction
 #define REG_M2DR   0x04  //motor 2, direction
 #define ADC1       0x05  //ADC 1
+#define GPIO1      0x06  //GPIO 1
 
 //op codes
 #define REGW       0x01
 #define CLRH       0x02
 #define RIFEQ      0x03
 #define RIFLT      0x04
+#define MODE       0x05
 
 
 /*
@@ -156,6 +158,17 @@ bool processCommand(char *command, int length, bool store){
       }
       return true;
     } 
+  }else if(op_code == MODE){
+    if(length >= 4){
+      int reg = command[2];
+      int mode = command[3];
+      if(reg == GPIO1 && mode == 0x00){
+        setInput(GPIO1_PIN); 
+      }else if(reg == GPIO1 && mode == 0x01){
+        setOutput(GPIO1_PIN);
+      }
+      return true;
+    }
   }else{ //unknown op code
     //clearBuffer();
     return true; //??

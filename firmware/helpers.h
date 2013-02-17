@@ -61,6 +61,7 @@ void setupSpi(){
 #define M1PW_PIN    PORTD, PD6, DDRD
 #define M2PW_PIN    PORTB, PB1, DDRB
 #define ADC1_PIN    PORTC, PC1, DDRC
+#define GPIO1_PIN   PORTD, PD7, DDRD
 #endif
 
 uint16_t ReadADC(uint8_t ADCchannel){
