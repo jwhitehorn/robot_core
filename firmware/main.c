@@ -24,24 +24,10 @@
 #define REGW       0x01
 #define CLRH       0x02
 #define RIFEQ      0x03
+#define RIFL       0x04
 
 
 /*
-
-Since the tiny (or any AVR) is limited on RAM, instead of a full blown general purpose bytecode, do the following:
-
-Add the following commands:
-
-RIFL x - raise the host pin if pin x is low
-RIFH x - raise the host pin if pin x is high
-RILT x, y - raise the host pin if analog pin x is less than y
-RIGT x, y - raise the host pin if analog pin x is greater than y
-REGWIFL x, y, z - writes y to register x if pin z is low
-REGWIFH x, y, z - writes y to register x if pin z is high
-REGWIFLT x, y, z, a - writes y to register x if pin z is less than a
-REGWIFGT x, y, z, a - writes y to register x if pin z is greater than a
-
-In fact, refactor the above to treat pins as registers to make it more general purpose.
 
 Have the main run-loop of the app just poll various pins and check various registers based on
 a table that the "processCommand" function esthablishes via direction of the host.
@@ -67,8 +53,8 @@ char command_buffer[MAX_COMMAND_LEN] = {0};
 int command_length = 0;
 
 
-#define TABLE_SIZE 10
-char table[TABLE_SIZE][MAX_COMMAND_LEN];
+#define MAX_TABLE_SIZE 10
+char table[MAX_TABLE_SIZE][MAX_COMMAND_LEN];
 int table_size = 0;
 
 
@@ -77,7 +63,16 @@ void clearBuffer(){
     for(int i = 0; i != MAX_COMMAND_LEN; i++) command_buffer[i] = 0x00; //clear buffer
 }
 
-bool processCommand(char *command, int length){
+void storeCommandInTable(char *command, int length){
+  if(table_size < MAX_TABLE_SIZE){
+    int table_entry = table_size++;
+    for(int i = 0; i != length || MAX_COMMAND_LEN; i++){
+      table[table_entry][i] = command[i];
+    }
+  }
+}
+
+bool processCommand(char *command, int length, bool store){
   if(length < 2) return false;    //no command is this short
   
   int op_code = command[1];  //first byte of op-code isn't implemented yet
@@ -126,14 +121,20 @@ bool processCommand(char *command, int length){
     return true;
   }else if(op_code == RIFEQ){
     if(length >= 4){
-      int tableEntry = table_size++;
-      //TODO: check for overflow
-      for(int i = 0; i != length; i++){
-        table[tableEntry][i] = command[i]; 
+      if(store){
+        storeCommandInTable(command, length);
+      }else{
       }
-      //clearBuffer();
       return true;
     }
+  }else if(op_code == RIFL){
+    if(length >= 4){
+      if(store){
+        storeCommandInTable(command, length);
+      }else{
+      }
+      return true;
+    } 
   }else{ //unknown op code
     //clearBuffer();
     return true; //??
@@ -142,7 +143,7 @@ bool processCommand(char *command, int length){
 }
 
 void processCommandBuffer(){
-  bool result = processCommand(command_buffer, command_length);
+  bool result = processCommand(command_buffer, command_length, true);
   if(result){
     clearBuffer();
   }
@@ -215,7 +216,7 @@ int main(void){
     //uint16_t adc = ReadADC(0);
     //OCR0A = (adc >> 2);
     for(int i = 0; i != table_size; i++){
-      processCommand(table[i], MAX_COMMAND_LEN); 
+      processCommand(table[i], MAX_COMMAND_LEN, false); 
     }
   }
 }
