@@ -76,17 +76,21 @@ void storeCommandInTable(char *command, int length){
 }
 
 int compareRegister(int reg, int value){
+  int valueRead = 0;
   if(reg == ADC1){
     uint16_t adc = ReadADC(0);
-    adc = (adc >> 2);
-    if(adc < value){
-      return -1;
-    }else if(adc == value){
-      return 0;
-    }
-    return 1;
+    valueRead = (adc >> 2);
+  }else if(reg == GPIO1){
+    valueRead = readPin(GPIO1_PIN);
+  }else{
+    return -2;
   } 
-  return -2;
+  if(valueRead < value){
+    return -1;
+  }else if(valueRead == value){
+    return 0;
+  }
+  return 1;
 }
 
 bool processCommand(char *command, int length, bool store){
@@ -141,11 +145,15 @@ bool processCommand(char *command, int length, bool store){
       if(store){
         storeCommandInTable(command, length);
       }else{
+//        outputHigh(HOST_PIN);
         int reg = command[2];
         int value = command[3];
         int result = compareRegister(reg, value);
         if(result == 0){
           outputHigh(HOST_PIN); 
+//        }else{
+//          sleep(1000);
+//          outputHigh(DEBUG_PIN);
         }
       }
       return true;
@@ -228,13 +236,22 @@ int main(void){
   outputLow(M1DR_PIN);
   setOutput(M2DR_PIN);
   outputLow(M2DR_PIN);
+
+  //by default, let's set GPIO pins to be inputs
+  setInput(GPIO1_PIN);
   
   //blink to signal ready...
   setOutput(DEBUG_PIN);
   outputHigh(DEBUG_PIN);
   sleep(1000);
   outputLow(DEBUG_PIN);
-  
+/*
+  table_size = 1;
+  table[0][0] = 0x00;
+  table[0][1] = 0x03;
+  table[0][2] = 0x06;
+  table[0][3] = 0x02; 
+*/  
   //ready!
   while(1){
     for(int i = 0; i != table_size; i++){
