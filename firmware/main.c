@@ -163,6 +163,12 @@ bool processCommand(char *command, int length, bool store){
       if(store){
         storeCommandInTable(command, length);
       }else{
+        int reg = command[2];
+        int value = command[3];
+        int result = compareRegister(reg, value);
+        if(result == -1){
+          outputHigh(HOST_PIN);
+        }
       }
       return true;
     } 
@@ -248,9 +254,9 @@ int main(void){
 /*
   table_size = 1;
   table[0][0] = 0x00;
-  table[0][1] = 0x03;
+  table[0][1] = 0x04;
   table[0][2] = 0x06;
-  table[0][3] = 0x02; 
+  table[0][3] = 0x01; 
 */  
   //ready!
   while(1){
