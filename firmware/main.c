@@ -129,7 +129,6 @@ bool processCommand(char *command, int length, bool store){
           outputLow(M2DR_PIN);
         }
       }
-      //clearBuffer();
       return true;
     }//else, wait for more bytes...
   }else if(op_code == CLRH){
@@ -138,22 +137,17 @@ bool processCommand(char *command, int length, bool store){
     * Command length: 2 bytes
     */
     outputLow(HOST_PIN);
-    //clearBuffer();
     return true;
   }else if(op_code == RIFEQ){
     if(length >= 4){
       if(store){
         storeCommandInTable(command, length);
       }else{
-//        outputHigh(HOST_PIN);
         int reg = command[2];
         int value = command[3];
         int result = compareRegister(reg, value);
         if(result == 0){
           outputHigh(HOST_PIN); 
-//        }else{
-//          sleep(1000);
-//          outputHigh(DEBUG_PIN);
         }
       }
       return true;
@@ -184,7 +178,6 @@ bool processCommand(char *command, int length, bool store){
       return true;
     }
   }else{ //unknown op code
-    //clearBuffer();
     return true; //??
   }
   return false;
@@ -232,7 +225,6 @@ int main(void){
   ADCSRA |= (1<<ADPS2)|(1<<ADPS1)|(1<<ADPS0)|(1<<ADEN);  
 
   //Setup SPI/USI
-  //CTRL_PORT |= _BV(DO_PIN);
   setupSpi();
 
   clearBuffer();
