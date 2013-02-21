@@ -28,6 +28,7 @@
 #define RIFEQ      0x03
 #define RIFLT      0x04
 #define MODE       0x05
+#define RIFGT      0x06
 
 
 /*
@@ -37,9 +38,6 @@ a table that the "processCommand" function esthablishes via direction of the hos
 
 The refactored commands might look like:
 
-RIFEQ x, y - raise the host pin if register x is equal to y (binary pins will have their registers either be 0x00 or 0x01)
-RIFLT x, y - raise the host pin if register x is less than y
-RIFGT x, y - raise the host pin if register x is greater than y
 REGWIFEQ w, x, y, z - writes x to register w if register y is equal to z
 REGWIFLT w, x, y, z - writes x to register w if register y is less than z
 REGWIFGT w, x, y, z - writes x to register w if register y is greater than z
@@ -138,7 +136,13 @@ bool processCommand(char *command, int length, bool store){
     */
     outputLow(HOST_PIN);
     return true;
-  }else if(op_code == RIFEQ){
+  }else if(op_code == RIFLT || op_code == RIFGT || op_code == RIFEQ){
+    /*
+    * RIFEQ x, y - raise the host pin if register x is equal to y (binary pins will have their registers either be 0x00 or 0x01)
+    * RIFLT x, y - raise the host pin if register x is less than y
+    * RIFGT x, y - raise the host pin if register x is greater than y
+    * Command Length: 4 bytes
+    */
     if(length >= 4){
       if(store){
         storeCommandInTable(command, length);
@@ -146,21 +150,11 @@ bool processCommand(char *command, int length, bool store){
         int reg = command[2];
         int value = command[3];
         int result = compareRegister(reg, value);
-        if(result == 0){
-          outputHigh(HOST_PIN); 
-        }
-      }
-      return true;
-    }
-  }else if(op_code == RIFLT){
-    if(length >= 4){
-      if(store){
-        storeCommandInTable(command, length);
-      }else{
-        int reg = command[2];
-        int value = command[3];
-        int result = compareRegister(reg, value);
-        if(result == -1){
+        if(op_code == RIFLT && result == -1){
+          outputHigh(HOST_PIN);
+        }else if(op_code == RIFGT && result == 1){
+          outputHigh(HOST_PIN);
+        }else if(op_code == RIFEQ && result == 0){
           outputHigh(HOST_PIN);
         }
       }
